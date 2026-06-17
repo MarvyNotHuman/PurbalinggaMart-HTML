@@ -224,7 +224,7 @@ const PM_UPLOAD = {
     try {
       const row = {
         id: product.id,
-        seller_id: product.sellerId,
+        seller_id: product.sellerId || product.sellerUsername,
         seller_username: product.sellerUsername,
         store_name: product.storeName,
         store_id: product.storeId,
@@ -246,7 +246,19 @@ const PM_UPLOAD = {
         created_at: product.createdAt,
         updated_at: new Date().toISOString(),
       };
-      await SB.post("pm_products", row);
+      /* Upsert: insert jika baru, update jika sudah ada (on conflict id) */
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/pm_products`, {
+        method: "POST",
+        headers: {
+          ...SB.headers,
+          Prefer: "resolution=merge-duplicates,return=representation",
+        },
+        body: JSON.stringify(row),
+      });
+      if (!r.ok) {
+        const err = await r.text();
+        console.warn("[Upload] Sync produk gagal:", err);
+      }
     } catch (e) {
       console.warn(
         "[Upload] Sync produk gagal (tetap tersimpan lokal):",
