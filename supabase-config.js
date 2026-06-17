@@ -224,7 +224,8 @@ const PM_UPLOAD = {
     try {
       const row = {
         id: product.id,
-        seller_id: product.sellerId || product.sellerUsername,
+        seller_id: typeof product.sellerId === 'number' ? product.sellerId
+                  : (parseInt(product.sellerId) || PM_AUTH?.getCurrentUser()?.id || null),
         seller_username: product.sellerUsername,
         store_name: product.storeName,
         store_id: product.storeId,
