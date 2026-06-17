@@ -230,6 +230,29 @@
 
       users.push(newUser);
       this.saveUsers(users);
+
+      // Sync ke Supabase (async, tidak blokir proses register)
+      if (typeof SB !== 'undefined') {
+        setTimeout(() => {
+          SB.post('pm_users', {
+            id:            newUser.id,
+            username:      newUser.username,
+            password_hash: newUser.password,
+            role:          'seller',
+            name:          newUser.name,
+            email:         newUser.email,
+            phone:         null,
+            avatar_url:    newUser.avatar,
+            store_name:    newUser.storeName,
+            store_id:      newUser.storeId,
+            category:      newUser.category,
+            location:      newUser.location,
+            status:        'active',
+            created_at:    new Date().toISOString(),
+          }).catch(e => console.warn('[Auth] Sync seller ke Supabase gagal:', e.message));
+        }, 200);
+      }
+
       return { ok: true, user: newUser };
     },
 
@@ -263,6 +286,29 @@
 
       users.push(newUser);
       this.saveUsers(users);
+
+      // Sync ke Supabase (async, tidak blokir proses register)
+      if (typeof SB !== 'undefined') {
+        setTimeout(() => {
+          SB.post('pm_users', {
+            id:            newUser.id,
+            username:      newUser.username,
+            password_hash: newUser.password,
+            role:          'buyer',
+            name:          newUser.name,
+            email:         newUser.email,
+            phone:         null,
+            avatar_url:    newUser.avatar,
+            store_name:    null,
+            store_id:      null,
+            category:      null,
+            location:      null,
+            status:        'active',
+            created_at:    new Date().toISOString(),
+          }).catch(e => console.warn('[Auth] Sync buyer ke Supabase gagal:', e.message));
+        }, 200);
+      }
+
       return { ok: true, user: newUser };
     },
 
