@@ -151,6 +151,20 @@ function handleRegister() {
     sessionStorage.setItem('pm_new_username', data.username);
     sessionStorage.setItem('pm_new_role', 'buyer');
 
+    // Sync user baru ke Supabase
+    if (result.user && typeof SB !== 'undefined') {
+      SB.post('pm_users', {
+        id:            result.user.id,
+        username:      result.user.username,
+        password_hash: result.user.password,
+        role:          result.user.role || 'buyer',
+        name:          result.user.name,
+        email:         result.user.email,
+        phone:         result.user.phone || null,
+        status:        'active',
+      }).catch(e => console.warn('[Register] Sync user gagal:', e.message));
+    }
+
     setTimeout(() => {
       window.location.href = 'login.html?msg=registered&role=buyer';
     }, 1600);
