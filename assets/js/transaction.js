@@ -305,6 +305,51 @@
     },
 
     getVouchers: () => VOUCHERS,
+
+    /* ── Payment Proof ───────────────────────────────────── */
+    /**
+     * Save payment proof (base64 image) to a transaction.
+     * @param {string} transactionId
+     * @param {string} imageBase64 - data:image/... base64 string
+     * @returns {boolean}
+     */
+    savePaymentProof(transactionId, imageBase64) {
+      const all = this.getAll();
+      const idx = all.findIndex(t => t.transactionId === transactionId);
+      if (idx === -1) return false;
+      all[idx].paymentProof = imageBase64;
+      all[idx].paymentProofUploadedAt = new Date().toISOString();
+      all[idx].paymentProofStatus = 'waiting'; // waiting | verified | rejected
+      all[idx].updatedAt = new Date().toISOString();
+      this.saveAll(all);
+      return true;
+    },
+
+    /**
+     * Seller verify or reject payment proof.
+     * @param {string} transactionId
+     * @param {'verified'|'rejected'} status
+     * @param {string} note
+     */
+    verifyPaymentProof(transactionId, status, note = '') {
+      const all = this.getAll();
+      const idx = all.findIndex(t => t.transactionId === transactionId);
+      if (idx === -1) return false;
+      all[idx].paymentProofStatus = status;
+      all[idx].paymentProofVerifiedAt = new Date().toISOString();
+      all[idx].paymentProofNote = note;
+      all[idx].updatedAt = new Date().toISOString();
+      // auto-update order status if verified
+      if (status === 'verified' && all[idx].status === 'pending') {
+        all[idx].status = 'diproses';
+        all[idx].statusHistory = [
+          ...(all[idx].statusHistory || []),
+          { status: 'diproses', time: new Date().toISOString(), note: 'Pembayaran terverifikasi oleh seller' },
+        ];
+      }
+      this.saveAll(all);
+      return true;
+    },
   };
 
   window.PM_TX = PM_TX;
