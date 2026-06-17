@@ -13,7 +13,7 @@
    🔧 KONFIGURASI — Ganti dengan URL & KEY Supabase kamu!
    ============================================================ */
 const SUPABASE_URL  = 'https://idhjiixsjlxcfamwddgk.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkaGppaXhzamx4Y2ZhbXdkZGsiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc4MTY4NDU0MiwiZXhwIjoyMDk3MjYwNTQyfQ.f1m_2vS8H7h9hiDo8mwNn-oYHJBn8uxDqu4KpuS2jU8';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkaGppaXhzamx4Y2ZhbXdkZGdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2ODQ1NDIsImV4cCI6MjA5NzI2MDU0Mn0.f1m_2vS8H7h9hiDo8mwNn-oYHJBn8uxDqu4KpuS2jU8';
 
 /* ── Supabase REST helper ─────────────────────────────────── */
 const SB = {
