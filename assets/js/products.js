@@ -332,7 +332,31 @@
     },
 
     /* ── Render all product sections ─────────────────────── */
-    renderAllSections() {
+    async renderAllSections() {
+      // Coba ambil dari Supabase, fallback ke localStorage
+      let allProducts = null;
+      if (typeof SB !== 'undefined') {
+        try {
+          allProducts = await SB.get('pm_products', '?status=eq.active&order=sold.desc');
+          // Sinkronkan ke localStorage agar fitur offline tetap jalan
+          if (allProducts && allProducts.length > 0) {
+            const mapped = allProducts.map(p => ({
+              id: p.id, sellerId: p.seller_id, sellerUsername: p.seller_username,
+              storeName: p.store_name, storeId: p.store_id, name: p.name,
+              category: p.category, location: p.location, price: p.price,
+              originalPrice: p.original_price || p.price, stock: p.stock,
+              sold: p.sold || 0, rating: p.rating || 0, ratingCount: p.rating_count || 0,
+              badge: p.badge || null, promo: p.promo || false, perishable: p.perishable || false,
+              description: p.description || '', image: p.image_url || '',
+              status: p.status, createdAt: p.created_at,
+            }));
+            PM_DB.saveProducts(mapped);
+          }
+        } catch (e) {
+          console.warn('[Products] Gagal fetch dari Supabase, pakai localStorage:', e.message);
+        }
+      }
+
       this.renderSection('products-latest',    PM_DB.getLatest(8),      'Belum ada produk terbaru.');
       this.renderSection('products-bestseller', PM_DB.getBestSellers(8), 'Belum ada produk terlaris.');
       this.renderSection('products-promo',     PM_DB.getPromo(8),       'Belum ada promo saat ini.');
