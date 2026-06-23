@@ -227,7 +227,7 @@
     /* ── Init ────────────────────────────────────────────────── */
     init() {
       // [FIX] Gunakan versioning agar perubahan seed data diterapkan saat versi berubah
-      const DB_VERSION = '2'; // Naikkan versi ini setiap kali seed data berubah
+      const DB_VERSION = '3'; // Naikkan versi ini setiap kali seed data berubah
       const storedVersion = localStorage.getItem(KEYS.INIT);
       if (storedVersion !== DB_VERSION) {
         this.saveProducts(SEED_PRODUCTS);
