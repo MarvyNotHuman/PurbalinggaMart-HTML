@@ -136,7 +136,7 @@
       const discount       = voucherResult?.discount || 0;
       const shippingDiscount = allPickup ? 0 : (voucherResult?.shippingDiscount || 0);
 
-      const serviceFee = Math.round(subtotal * 0.01); // 1% platform fee
+      const serviceFee = Math.round(subtotal * 0.1); // 1% platform fee
       const total      = subtotal + (shipping - shippingDiscount) - discount + serviceFee;
 
       const tx = {
